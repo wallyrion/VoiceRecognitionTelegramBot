@@ -1,12 +1,12 @@
-name: Build and deploy .NET Core app to Linux WebApp VoiceRecognitionBot20220126111019
+name: Build and deploy .NET Core app to Linux WebApp VoiceRecognitionBot
 on:
   push:
     branches:
     - master
 env:
-  AZURE_WEBAPP_NAME: VoiceRecognitionBot20220126111019
+  AZURE_WEBAPP_NAME: VoiceRecognitionBot
   AZURE_WEBAPP_PACKAGE_PATH: VoiceRecognitionBot/publish
-  AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.VoiceRecognitionBot20220126111019_026e }}
+  AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.VoiceRecognitionBot_70d6 }}
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 6.0.x
   WORKING_DIRECTORY: VoiceRecognitionBot
