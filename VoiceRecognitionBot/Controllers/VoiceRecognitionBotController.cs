@@ -22,6 +22,7 @@ namespace VoiceRecognitionBot.Controllers
         [HttpGet("Status")]
         public async Task<ActionResult> GetStatus()
         {
+            _logger.LogInformation("Status called");
             return Ok(DateTime.UtcNow.ToShortDateString());
         }
 
