@@ -19,6 +19,12 @@ namespace VoiceRecognitionBot.Controllers
             _botFramework = botFramework;
         }
 
+        [HttpGet("Status")]
+        public async Task<ActionResult> GetStatus()
+        {
+            return Ok(DateTime.UtcNow.ToShortDateString());
+        }
+
         [HttpGet("Subscribe")]
         public async Task<ActionResult> SubscribeToBot()
         {
