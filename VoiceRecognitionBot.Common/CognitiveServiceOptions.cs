@@ -2,7 +2,7 @@
 {
     public class CognitiveServiceOptions
     {
-        public string AzureCognitiveServiceId { get; set; }
-        public string AzureCognitiveRegion { get; set; }
+        public string AzureCognitiveServiceId { get; set; } = null!;
+        public string AzureCognitiveRegion { get; set; } = null!;
     }
 }

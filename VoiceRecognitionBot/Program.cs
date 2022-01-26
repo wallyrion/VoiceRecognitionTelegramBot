@@ -29,12 +29,20 @@ builder.Services.AddSingleton<VoiceRecognizer>();
 
 
 var app = builder.Build();
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    logger.LogInformation("Starting application is Development mode");
+
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    logger.LogInformation("Starting application is Prod mode");
+
 }
 
 app.UseHttpsRedirection();
