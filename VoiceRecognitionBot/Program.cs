@@ -1,4 +1,7 @@
+using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.ApplicationInsights.Sinks.ApplicationInsights.TelemetryConverters;
 using Telegram.Bot;
 using VoiceRecognitionBot;
 using VoiceRecognitionBot.CognitiveService;
@@ -15,17 +18,19 @@ Log.Logger = new LoggerConfiguration()
 Log.Information("Starting up");
 try
 {
-    builder.Host.UseSerilog((ctx, lc) => lc
-        .WriteTo.Console()
-        .ReadFrom.Configuration(ctx.Configuration));
-
     builder.ConfigureServices();
 
+    var appInsightKey = builder.Configuration["Logging:ApplicationInsights:InstrumentationKey"];
+    builder.Host.UseSerilog((ctx, lc) => lc
+        .WriteTo.Console()
+        //.WriteTo.ApplicationInsights(new TelemetryConfiguration(appInsightKey), new TraceTelemetryConverter(), LogEventLevel.Information)
+        .ReadFrom.Configuration(ctx.Configuration));
+
+
     var app = builder.Build();
+
     //var logger = app.Services.GetRequiredService<ILogger<Program>>();
     app.UseSerilogRequestLogging();
-
-
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {

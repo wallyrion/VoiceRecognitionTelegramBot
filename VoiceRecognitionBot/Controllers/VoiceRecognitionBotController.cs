@@ -23,7 +23,8 @@ namespace VoiceRecognitionBot.Controllers
         public async Task<ActionResult> GetStatus()
         {
             _logger.LogError("Some error occured {0}", DateTime.UtcNow);
-            _logger.LogInformation("Status called");
+            _logger.LogInformation("new info log - GetStatus");
+            _logger.LogDebug("debug - Status called");
             return Ok("Hello there ! " + DateTime.UtcNow.ToShortDateString());
         }
 
