@@ -24,7 +24,7 @@ namespace VoiceRecognitionBot.Controllers
         {
             _logger.LogError("Some error occured {0}", DateTime.UtcNow);
             _logger.LogInformation("Status called");
-            return Ok("new healthcheck" + DateTime.UtcNow.ToShortDateString());
+            return Ok("Hello there ! " + DateTime.UtcNow.ToShortDateString());
         }
 
         [HttpGet("Subscribe")]
