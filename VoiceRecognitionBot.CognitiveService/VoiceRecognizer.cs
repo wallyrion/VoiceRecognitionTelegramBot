@@ -46,9 +46,7 @@ public class VoiceRecognizer
         {
             if (e.Reason == CancellationReason.Error)
             {
-                _logger.LogError($"CANCELED: ErrorCode={e.ErrorCode}");
-                _logger.LogError($"CANCELED: ErrorDetails={e.ErrorDetails}");
-                _logger.LogError($"CANCELED: Did you update the subscription info?");
+                _logger.LogError($"CANCELED: ErrorCode={e.ErrorCode} ErrorDetails={e.ErrorDetails}");
             }
 
             stopRecognition.TrySetResult(0);

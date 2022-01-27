@@ -1,54 +1,59 @@
+using Serilog;
 using Telegram.Bot;
 using VoiceRecognitionBot;
 using VoiceRecognitionBot.CognitiveService;
 using VoiceRecognitionBot.Common;
+using VoiceRecognitionBot.Infrastructure;
 using VoiceRecognitionBot.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-ConfigurationManager configuration = builder.Configuration;
-
-builder.Services.Configure<CognitiveServiceOptions>(configuration.GetSection("CognitiveServiceOptions"));
-builder.Services.Configure<TelegramBotOptions>(configuration.GetSection("TelegramBot"));
-builder.Services.AddApplicationInsightsTelemetry();
-
-builder.Services.AddSingleton<TelegramBotClient>(p => new TelegramBotClient(configuration.GetSection("TelegramBot:Token").Value));
-
-builder.Services.AddHostedService<BotService>();
-
-builder.Services.AddSingleton<BotFramework>();
-builder.Services.AddSingleton<FileConverter>();
-builder.Services.AddSingleton<TelegramHelper>();
-builder.Services.AddSingleton<VoiceRecognizer>();
-
-
-var app = builder.Build();
-var logger = app.Services.GetRequiredService<ILogger<Program>>();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+Log.Information("Starting up");
+try
 {
-    logger.LogInformation("Starting application is Development mode");
+    builder.Host.UseSerilog((ctx, lc) => lc
+        .WriteTo.Console()
+        .ReadFrom.Configuration(ctx.Configuration));
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    builder.ConfigureServices();
+
+    var app = builder.Build();
+    //var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    app.UseSerilogRequestLogging();
+
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        Log.Information("Starting application is Development mode");
+
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+    else
+    {
+        Log.Information("Starting application is Prod mode");
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.Run();
+
 }
-else
+catch (Exception ex)
 {
-    logger.LogInformation("Starting application is Prod mode");
-
+    Log.Fatal(ex, "Unhandled exception");
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+finally
+{
+    Log.Information("Shut down complete");
+    Log.CloseAndFlush();
+}
